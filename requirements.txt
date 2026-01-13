@@ -1,0 +1,7 @@
+torch
+streamlit
+rdkit
+pandas
+stmol
+py3Dmol
+ipython_genutils

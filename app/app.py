@@ -82,35 +82,35 @@ stoi, itos, vocab_size, gap_min, gap_max, training_set = load_project_data()
 total_vocab_size, n_embd, n_hidden = vocab_size + 50, 24, 512
 BLOCK_SIZE_GEN, BLOCK_SIZE_PRED = 24, 32 # Prevents Shape Errors
 
-def load_models():
-    gen = Sequential([
-        Embedding(total_vocab_size, n_embd),
-        FlattenConsecutive(2), Linear(n_embd * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        Linear(n_hidden, vocab_size),
-    ])
-    pred = Sequential([
-        Embedding(total_vocab_size, n_embd),
-        FlattenConsecutive(2), Linear(n_embd * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
-        Linear(n_hidden, 1),
-    ])
-    try:
-        g_params = torch.load('notebooks/generator_weights.pt', map_location='cpu')
-        for p, ps in zip(gen.parameters(), g_params): p.data = ps.data
-        p_params = torch.load('notebooks/predictor_weights.pt', map_location='cpu')
-        for p, ps in zip(pred.parameters(), p_params): p.data = ps.data
-        st.sidebar.success("Weights Loaded")
-    except: st.sidebar.error("Weights Not Found")
-    return gen, pred
+# def load_models():
+#     gen = Sequential([
+#         Embedding(total_vocab_size, n_embd),
+#         FlattenConsecutive(2), Linear(n_embd * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         Linear(n_hidden, vocab_size),
+#     ])
+#     pred = Sequential([
+#         Embedding(total_vocab_size, n_embd),
+#         FlattenConsecutive(2), Linear(n_embd * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         FlattenConsecutive(2), Linear(n_hidden * 2, n_hidden, bias=False), BatchNorm1d(n_hidden), Tanh(),
+#         Linear(n_hidden, 1),
+#     ])
+#     try:
+#         g_params = torch.load('notebooks/generator_weights.pt', map_location='cpu')
+#         for p, ps in zip(gen.parameters(), g_params): p.data = ps.data
+#         p_params = torch.load('notebooks/predictor_weights.pt', map_location='cpu')
+#         for p, ps in zip(pred.parameters(), p_params): p.data = ps.data
+#         st.sidebar.success("Weights Loaded")
+#     except: st.sidebar.error("Weights Not Found")
+#     return gen, pred
 
-gen_model, pred_model = load_models()
+# gen_model, pred_model = load_models()
 
-st.set_page_config(page_title="QM9-GPT Discovery Lab", layout="wide", page_icon="🧪")
+st.set_page_config(page_title="QM9-GPT Discovery Lab", layout="wide")
 
 st.markdown("""
     <style>
@@ -155,11 +155,12 @@ def load_models():
         Linear(n_hidden, 1),
     ])
     try:
-        g_params = torch.load('notebooks/generator_weights.pt', map_location='cpu')
+        g_params = torch.load('outputs/generator_weights.pt', map_location='cpu')
         for p, ps in zip(gen.parameters(), g_params): p.data = ps.data
-        p_params = torch.load('notebooks/predictor_weights.pt', map_location='cpu')
+        p_params = torch.load('outputs/predictor_weights.pt', map_location='cpu')
         for p, ps in zip(pred.parameters(), p_params): p.data = ps.data
-    except: st.error("Weights not found.")
+        st.sidebar.success("Weights Loaded")
+    except: st.sidebar.error("Weights Not Found")
     return gen, pred
 
 gen_model, pred_model = load_models()
