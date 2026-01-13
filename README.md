@@ -57,7 +57,7 @@ The AI successfully generates a wide range of chemical scaffolds for a single en
 
 ## Deployment & Installation
 
-The project is live at **[qm9-gpt.streamlit.app](https://www.google.com/search?q=https://qm9-gpt.streamlit.app)**.
+The project is live at **[qm9-gpt.streamlit.app](https://qm9-gpt.streamlit.app)**.
 
 To run locally:
 
